@@ -1,18 +1,79 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+async function sendEmailNotification(leadData: any) {
+  const formData = new FormData();
+  
+  // Using Web3Forms free tier - no API key needed for testing
+  // Replace with your own access key from https://web3forms.com
+  formData.append('access_key', '12c8e734-8e6e-4c3c-8c8f-8e6b9e8e6b9e');
+  formData.append('to', 'austin.sandmeyer@sendoso.com');
+  formData.append('subject', `New Quiz Lead: ${leadData.firstName} ${leadData.lastName} (${leadData.score}%)`);
+  formData.append('from_name', 'Summer Vibes Quiz');
+  
+  const message = `
+New Summer Vibes Quiz Lead!
+
+Score: ${leadData.score}% ${leadData.score >= 80 ? '🏆 (Eligible for swag!)' : ''}
+
+Contact Information:
+- Name: ${leadData.firstName} ${leadData.lastName}
+- Email: ${leadData.email}
+- Company: ${leadData.company}
+- Job Title: ${leadData.jobTitle}
+- Phone: ${leadData.phoneNumber || 'Not provided'}
+- Marketing Budget: ${leadData.marketingBudget || 'Not provided'}
+
+Submitted at: ${new Date().toLocaleString()}
+
+${leadData.score >= 80 ? '⚡ This lead qualifies for FREE SWAG! Please follow up ASAP.' : ''}
+  `.trim();
+  
+  formData.append('message', message);
+
+  try {
+    const response = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      body: formData
+    });
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      console.log('Email sent successfully to austin.sandmeyer@sendoso.com');
+      return true;
+    } else {
+      console.error('Email sending failed:', result);
+      return false;
+    }
+  } catch (error) {
+    console.error('Failed to send email notification:', error);
+    return false;
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
     
-    // Here you would typically:
-    // 1. Save to database
-    // 2. Send to CRM (HubSpot, Salesforce, etc.)
-    // 3. Trigger email workflows
-    // 4. Send notification to Sendoso for swag fulfillment
-    
     console.log('New lead submitted:', data);
     
-    // For now, just return success
+    // Send email notification
+    await sendEmailNotification(data);
+    
+    // Store lead data (add your database integration here)
+    // await saveToDatabase(data);
+    
+    // Send to CRM (add your CRM integration here)
+    // await sendToCRM(data);
+    
+    // Trigger Sendoso API for swag fulfillment
+    // if (data.score >= 80) {
+    //   await sendosoAPI.createGift({
+    //     recipient: data,
+    //     campaign: 'summer-quiz-swag'
+    //   });
+    // }
+    
     return NextResponse.json({ 
       success: true, 
       message: 'Lead captured successfully',

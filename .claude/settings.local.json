@@ -9,7 +9,15 @@
       "Bash(yarn install)",
       "Bash(sudo chown:*)",
       "Bash(git init:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git remote add:*)",
+      "Bash(git branch:*)",
+      "Bash(git push:*)",
+      "Bash(git remote remove:*)",
+      "Bash(git remote set-url:*)",
+      "Bash(gh auth:*)",
+      "Bash(brew install:*)"
     ],
     "deny": []
   }
