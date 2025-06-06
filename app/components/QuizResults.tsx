@@ -93,7 +93,7 @@ export default function QuizResults({ score, totalQuestions, leadData, onRestart
             </p>
             {isEligibleForSwag && (
               <p className="text-gray-700">
-                We'll send swag details to <span className="font-medium">{leadData.email}</span>
+                We&apos;ll send swag details to <span className="font-medium">{leadData.email}</span>
               </p>
             )}
           </div>
