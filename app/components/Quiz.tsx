@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { quizQuestions } from '../lib/quizData';
+import { useState, useEffect } from 'react';
+import { getRandomQuestions, QuizQuestion as QuizQuestionType } from '../lib/quizData';
 import QuizQuestion from './QuizQuestion';
 import QuizResults from './QuizResults';
 import LeadForm from './LeadForm';
@@ -12,6 +12,12 @@ export default function Quiz() {
   const [showResults, setShowResults] = useState(false);
   const [showLeadForm, setShowLeadForm] = useState(false);
   const [leadData, setLeadData] = useState<any>(null);
+  const [quizQuestions, setQuizQuestions] = useState<QuizQuestionType[]>([]);
+
+  // Generate random questions on component mount
+  useEffect(() => {
+    setQuizQuestions(getRandomQuestions());
+  }, []);
 
   const handleAnswer = (answerIndex: number) => {
     const newAnswers = [...answers, answerIndex];
@@ -40,6 +46,7 @@ export default function Quiz() {
     setShowResults(false);
     setShowLeadForm(false);
     setLeadData(null);
+    setQuizQuestions(getRandomQuestions()); // Generate new random questions
   };
 
   const calculateScore = () => {
@@ -48,6 +55,19 @@ export default function Quiz() {
     ).length;
     return Math.round((correct / quizQuestions.length) * 100);
   };
+
+  // Show loading state while questions are being generated
+  if (quizQuestions.length === 0) {
+    return (
+      <div className="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-8 md:p-12">
+        <div className="text-center">
+          <div className="text-6xl mb-4">🌴</div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">Preparing Your Summer Quiz...</h2>
+          <div className="animate-pulse bg-gradient-to-r from-orange-400 to-pink-500 h-2 rounded-full"></div>
+        </div>
+      </div>
+    );
+  }
 
   if (showResults) {
     return (

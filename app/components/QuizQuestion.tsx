@@ -1,7 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { QuizQuestion as QuizQuestionType } from '../lib/quizData';
+
+interface QuizQuestionType {
+  id: number;
+  question: string;
+  options: string[];
+  correctAnswer: number;
+  funFact?: string;
+}
 
 interface QuizQuestionProps {
   question: QuizQuestionType;
