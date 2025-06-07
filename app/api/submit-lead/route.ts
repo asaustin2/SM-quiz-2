@@ -5,7 +5,7 @@ async function sendEmailNotification(leadData: any) {
   
   // Using Web3Forms free tier - no API key needed for testing
   // Replace with your own access key from https://web3forms.com
-  formData.append('access_key', '12c8e734-8e6e-4c3c-8c8f-8e6b9e8e6b9e');
+  formData.append('access_key', process.env.WEB3FORMS_ACCESS_KEY || '6c71781c-7f1d-4467-8f36-62fb5ce6fd3e');
   formData.append('to', 'austin.sandmeyer@sendoso.com');
   formData.append('subject', `New Quiz Lead: ${leadData.firstName} ${leadData.lastName} (${leadData.score}%)`);
   formData.append('from_name', 'Summer Vibes Quiz');
